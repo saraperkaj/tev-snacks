@@ -20,7 +20,7 @@ snacks.get("/", async (_, response) => {
     return;
   }
 
-  response.status(200).json(allSnacks);
+  response.status(200).json({ success: true, payload: allSnacks });
 });
 
 // Show snack
@@ -28,9 +28,9 @@ snacks.get("/:id", async (request, response) => {
   console.log("GET request to /snacks/:id");
   const snack = await getOneSnack(request.params.id);
   if (snack.id) {
-    response.status(200).json(snack);
+    response.status(200).json({ success: true, payload: snack });
   } else {
-    response.status(404).json("snack does not exist");
+    response.status(404).json({ error: error });
   }
 });
 
@@ -39,9 +39,9 @@ snacks.post("/", async (request, response) => {
   try {
     console.log("POST request to /snacks");
     const newSnack = await addNewSnack(request.body);
-    response.json(newSnack);
+    response.json({ success: true, payload: newSnack });
   } catch (error) {
-    response.status(400).json({ error: error });
+    response.status(400).json({ error: "error" });
   }
 });
 
@@ -50,7 +50,7 @@ snacks.delete("/:id", async (request, response) => {
   console.log("DELETE request to /snacks/:id");
   const deletedSnack = await deleteSnack(request.params.id);
   if (deletedSnack.id) {
-    response.status(200).json(deletedSnack);
+    response.status(200).json({ success: true, payload: deletedSnack });
   } else {
     response.status(404).json("snack does not exist.");
   }
@@ -61,7 +61,7 @@ snacks.put("/:id", async (request, response) => {
   try {
     console.log("UPDATE request to /snacks/:id");
     const updatedSnack = await updateSnack(request.body, request.params.id);
-    response.status(200).json(updatedSnack);
+    response.status(200).json({ success: true, payload: updatedSnack });
   } catch (error) {
     response.status(400).json({ error: "SNACK DOES NOT EXIST!" });
   }
