@@ -15,7 +15,7 @@ snacks.get("/", async (_, response) => {
   console.log("GET request to /snacks");
   const allSnacks = await getAllSnacks();
   if (allSnacks.length === 0) {
-    response.status(500).json({ error: "server error" });
+    response.status(500).json({ success: false, payload: "server error" });
 
     return;
   }
@@ -30,18 +30,21 @@ snacks.get("/:id", async (request, response) => {
   if (snack.id) {
     response.status(200).json({ success: true, payload: snack });
   } else {
-    response.status(404).json({ error: error });
+    response.status(404).json({ success: false, payload: "/not found/" });
   }
 });
 
 // Create snack
 snacks.post("/", async (request, response) => {
   try {
+    // if(name && !image){
+
+    // }
     console.log("POST request to /snacks");
     const newSnack = await addNewSnack(request.body);
     response.json({ success: true, payload: newSnack });
   } catch (error) {
-    response.status(400).json({ error: "error" });
+    response.status(400).json({ success: false, payload: "error" });
   }
 });
 
@@ -52,7 +55,9 @@ snacks.delete("/:id", async (request, response) => {
   if (deletedSnack.id) {
     response.status(200).json({ success: true, payload: deletedSnack });
   } else {
-    response.status(404).json("snack does not exist.");
+    response
+      .status(404)
+      .json({ success: false, payload: `Invalid ${request.params.id}` });
   }
 });
 
@@ -63,7 +68,9 @@ snacks.put("/:id", async (request, response) => {
     const updatedSnack = await updateSnack(request.body, request.params.id);
     response.status(200).json({ success: true, payload: updatedSnack });
   } catch (error) {
-    response.status(400).json({ error: "SNACK DOES NOT EXIST!" });
+    response
+      .status(400)
+      .json({ success: false, payload: `Invalid ${request.params.id}` });
   }
 });
 
